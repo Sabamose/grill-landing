@@ -1,4 +1,4 @@
-const FORMSPREE_URL = 'https://formspree.io/f/xpwzgkby';
+const FORMSPREE_URL = 'https://formspree.io/f/mojkkjvj';
 
 export async function submitWaitlist(email) {
   const res = await fetch(FORMSPREE_URL, {
