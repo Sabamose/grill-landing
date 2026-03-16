@@ -262,7 +262,13 @@ function ChatTab() {
   const autoPlayStarted = useRef(false);
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    const el = messagesEndRef.current;
+    if (el) {
+      const scrollParent = el.closest('.overflow-y-auto');
+      if (scrollParent) {
+        scrollParent.scrollTop = scrollParent.scrollHeight;
+      }
+    }
   }, [messages, typingText]);
 
   // Auto-play orchestrator

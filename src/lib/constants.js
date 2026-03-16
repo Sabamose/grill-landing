@@ -172,11 +172,10 @@ export const TRACTION = {
 export const PRICING = [
   {
     name: 'Starter',
-    price: 99,
-    period: '/room/month',
-    description: 'For small boutique hotels getting started with guest intelligence.',
+    price: 79,
+    period: '/mo',
+    description: '20 rooms · 3 users',
     features: [
-      'Up to 30 rooms',
       'Unified guest profiles',
       'Morning briefings',
       '2 system integrations',
@@ -187,11 +186,10 @@ export const PRICING = [
   },
   {
     name: 'Pro',
-    price: 199,
-    period: '/room/month',
-    description: 'For hotels serious about personalized guest experiences.',
+    price: 179,
+    period: '/mo',
+    description: '50 rooms · Unlimited · Full API',
     features: [
-      'Up to 100 rooms',
       'Everything in Starter',
       'AI-powered insights',
       'Unlimited integrations',
@@ -203,12 +201,11 @@ export const PRICING = [
     highlighted: true,
   },
   {
-    name: 'Enterprise',
+    name: 'Scale',
     price: null,
     period: '',
-    description: 'For hotel groups and chains needing custom solutions.',
+    description: 'Multi-property · White label',
     features: [
-      'Unlimited rooms',
       'Everything in Pro',
       'Multi-property dashboard',
       'Custom AI training',
@@ -256,7 +253,7 @@ export const FOOTER_LINKS = [
 ];
 
 export const FOUNDER = {
-  name: 'Juan Lemoine',
-  email: 'juan@getgrill.io',
+  name: 'Grill Team',
+  email: 'sabamoseshvili@trav-nex.com',
   role: 'Founder & CEO',
 };

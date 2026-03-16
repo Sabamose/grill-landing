@@ -40,10 +40,7 @@ export default function Footer() {
           <div>
             <h4 className="text-sm font-semibold text-cream mb-4">Company</h4>
             <p className="text-sm text-slate-light">
-              Built for boutique & luxury hotels in Latin America and beyond.
-            </p>
-            <p className="text-sm text-slate-light mt-3">
-              Founded by {FOUNDER.name}
+              Built for boutique & luxury hotels.
             </p>
           </div>
         </div>
@@ -51,9 +48,6 @@ export default function Footer() {
         <div className="border-t border-cream/5 mt-12 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-xs text-slate">
             &copy; {new Date().getFullYear()} Grill. All rights reserved.
-          </p>
-          <p className="text-xs text-slate">
-            Bogot&aacute;, Colombia
           </p>
         </div>
       </div>
