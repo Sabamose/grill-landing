@@ -1,9 +1,11 @@
 // Chat Engine — Grill Staff Assistant
 // Pattern-matching response generator for the interactive demo
+// Hotel Panorama, Crans-Montana, Switzerland
 
 import {
   rooms, guests, upcomingGuests, reservations,
   serviceRequests, staff, restaurants, hotelPolicies,
+  competitors,
 } from './hotel-data';
 
 const allGuests = [...guests, ...upcomingGuests];
@@ -48,9 +50,9 @@ export function generateResponse(userMessage) {
 **${occupied} of ${rooms.length} rooms** occupied today. Here's what matters:
 
 ### What's special today
-- **Marie Dubois** (The Lucho) — Birthday is coming up. Cake surprise requested. **Confirm with kitchen today.**
-- **Carlos Mendoza** (The Helen) — Checking out. Airport transfer at 3pm. He mentioned interest in a **15-person company event** — worth a follow-up before he leaves.
-- **Isabella & Marco** (The María) — Honeymoon couple. Dinner at Andrés Carne de Res on Saturday — remind them to leave by 5pm for the drive.
+- **James Richardson** (Suite 401) — 50th birthday. Prep welcome gesture + birthday card. Wife Sarah — stock Fendant du Valais. **Vegetarian — kitchen flagged.**
+- **Marco Rossi** (Deluxe 301) — Checking out. Geneva airport transfer at 2pm. Strictly **gluten-free**. Mentioned interest in anniversary dinner return — worth a follow-up.
+- **Sarah Thompson** (Superior 105) — Condé Nast Traveler journalist. **Strict vegan.** Photographing property — rooms must be spotless.
 
 ### Pending tasks
 ${pending.map((s) => {
@@ -65,11 +67,77 @@ ${tomorrowArrivals.length > 0
       return `- **${g?.firstName} ${g?.lastName}** arriving — ${r.preArrivalComplete ? 'profile ready' : '⚠ profile incomplete, needs outreach'}`;
     }).join('\n')
   : 'No arrivals tomorrow.'}
-${incomplete.length > 0 ? `\n**Camila:** ${incomplete.length} guest(s) still need pre-arrival outreach.` : ''}
+${incomplete.length > 0 ? `\n**Marie:** ${incomplete.length} guest(s) still need pre-arrival outreach.` : ''}
 
 ### Weather
-22°C today, pleasant morning, likely afternoon rain. **Remind guests to carry an umbrella** if heading out after lunch.`;
-    dataSources = ['Opera PMS', 'Guest Profiles', 'Service Requests'];
+4°C today, clear skies. Excellent skiing conditions on all lifts. Visibility is great for glacier views.`;
+    dataSources = ['Mews PMS', 'Guest Memory', 'Service Requests'];
+  }
+
+  // ---- COMPETITOR RATES ----
+  else if (msg.includes('competitor') || msg.includes('rates') || msg.includes('lecrans') || msg.includes('guarda') || msg.includes('ambassador') || msg.includes('pricing')) {
+    content = `## Competitor Rates — Crans-Montana\n\n`;
+    competitors.forEach(c => {
+      content += `### ${c.name} (${c.stars}★ · ${c.distance})\n`;
+      content += `Standard: CHF ${c.rates.standard} · Superior: CHF ${c.rates.superior} · Deluxe: CHF ${c.rates.deluxe} · Suite: CHF ${c.rates.suite}\n`;
+      content += `Trend: ${c.change} · ${c.positioning}\n\n`;
+    });
+    content += `### Our Rates\nStandard: CHF 280 · Superior: CHF 380 · Deluxe: CHF 490 · Suite: CHF 950\n\n`;
+    content += `**Insight:** Weekend gap — competitors add 15-20% Fri-Sun, we only add 10%. Opportunity to adjust weekend rates upward.`;
+    dataSources = ['Competitor Intel', 'Rate Engine'];
+  }
+
+  // ---- NIGHT AUDIT ----
+  else if (msg.includes('night audit') || msg.includes('audit') || msg.includes('revenue') || msg.includes('reconcil')) {
+    const occupied = rooms.filter((r) => r.status === 'occupied').length;
+    const totalRevenue = reservations.filter(r => r.status === 'checked-in').reduce((sum, r) => sum + (r.totalAmount / 4), 0);
+    content = `## Night Audit Summary\n\n`;
+    content += `**Occupancy:** ${occupied}/${rooms.length} rooms (${Math.round((occupied / rooms.length) * 100)}%)\n`;
+    content += `**Est. Revenue Today:** CHF ${Math.round(totalRevenue).toLocaleString()}\n`;
+    content += `**F&B Revenue:** CHF 2,180 (Lightspeed POS)\n\n`;
+    content += `### Flags\n`;
+    content += `- Room 302 minibar charge reversed twice — needs review\n`;
+    content += `- Marco Rossi (Deluxe 301) checking out — folio finalization pending\n\n`;
+    content += `✅ All other folios balanced. No discrepancies.`;
+    dataSources = ['Mews PMS', 'Lightspeed POS', 'Folio System'];
+  }
+
+  // ---- REVIEWS ----
+  else if (msg.includes('review') || msg.includes('google review') || msg.includes('rating')) {
+    content = `## Recent Google Reviews\n\n`;
+    content += `### ⭐⭐⭐⭐⭐ — Marco Rossi\n`;
+    content += `"Amazing hotel with stunning Alpine views. The staff remembered our anniversary and had Prosecco waiting in the room!"\n\n`;
+    content += `**Draft response:**\n"Thank you, Marco! It was a pleasure celebrating with you and Isabella. The Crans-Montana views were at their best for your visit. We look forward to welcoming you back soon."\n\n`;
+    content += `✏️ Edit or approve to publish.\n\n`;
+    content += `### ⭐⭐⭐⭐ — Sophie Muller\n`;
+    content += `"Great location for hiking. Breakfast was good but could use more variety."\n\n`;
+    content += `**Draft response:**\n"Thank you for your kind review, Sophie! We're glad you enjoyed the hiking trails. We've noted your feedback about breakfast variety and are working on expanding our morning menu."`;
+    dataSources = ['Google Reviews', 'Guest Memory'];
+  }
+
+  // ---- UPSELL ----
+  else if (msg.includes('upsell') || msg.includes('upgrade') || msg.includes('opportunity') || msg.includes('revenue opportunity')) {
+    content = `## Upsell Opportunities Today\n\n`;
+    content += `- **James Richardson** (Suite 401) — Birthday trip. Suggest: Panorama Suite 502 upgrade (+CHF 300/night). VIP guest, 3rd stay. *Needs manager approval.*\n`;
+    content += `- **Sophie Muller** (Superior 203) — Interested in glacier hike. Suggest: Premium guided glacier tour package (CHF 180/person). First timer.\n`;
+    content += `- **Yuki Tanaka** (Suite 402) — Corporate guest. Suggest: Meeting room package (CHF 250/day). Tokyo Dynamics executive.\n`;
+    content += `- **David Chen** (Deluxe 204) — Photography trip. Suggest: Sunrise photography guide add-on (CHF 120). Loved it last visit.\n\n`;
+    content += `*Estimated potential uplift: CHF 1,450 today*`;
+    dataSources = ['Guest Memory', 'Mews PMS', 'Revenue Engine'];
+  }
+
+  // ---- TASKS / ALERTS ----
+  else if (msg.includes('alert') || msg.includes('smart alert')) {
+    content = `## Smart Alerts\n\n`;
+    content += `### Active Alerts\n`;
+    content += `- 🔴 **VIP Birthday** — James Richardson turns 50. Gesture needed today.\n`;
+    content += `- 🟠 **Press Guest** — Sarah Thompson (Condé Nast) is photographing. All rooms must be spotless.\n`;
+    content += `- 🟡 **Competitor Rate Drop** — Crans Ambassador dropped 5% on Superior rooms. Monitor.\n`;
+    content += `- 🟢 **Pre-arrival Gap** — 3 guests arriving tomorrow without complete profiles.\n\n`;
+    content += `### Resolved Today\n`;
+    content += `- ✅ Pierre Lambert wine delivery from vineyard — stored in cellar\n`;
+    content += `- ✅ Marco Rossi gluten-free menu confirmed with Jean-Pierre`;
+    dataSources = ['Alert Engine', 'Guest Memory', 'Competitor Intel'];
   }
 
   // ---- MICRO-OBSERVATION / NOTE LOGGING ----
@@ -84,17 +152,14 @@ ${incomplete.length > 0 ? `\n**Camila:** ${incomplete.length} guest(s) still nee
     }
 
     if (guest) {
-      content = `**Noted for ${guest.firstName} ${guest.lastName}.**\n\nI've saved this to their profile. Here's what this means:\n\n`;
+      content = `**Noted for ${guest.firstName} ${guest.lastName}.**\n\nI've saved this to their guest memory. Here's what this means:\n\n`;
       if (msg.includes('loved') || msg.includes('liked') || msg.includes('enjoyed')) {
         content += `- This will be remembered for future visits and recommendations\n`;
         content += `- If ${guest.firstName} returns, any staff member will see this preference\n`;
-        if (msg.includes('restaurant') || msg.includes('dinner') || msg.includes('lunch')) {
-          content += `- I'll avoid recommending this place again and suggest similar options next time\n`;
-        }
       }
       if (msg.includes('left half') || msg.includes("didn't finish") || msg.includes('too much')) {
         content += `- I'll flag smaller portions for ${guest.firstName} going forward\n`;
-        content += `- Kitchen team will see this note at breakfast prep\n`;
+        content += `- Jean-Pierre (Kitchen) will see this note at breakfast prep\n`;
       }
       if (msg.includes('complained') || msg.includes("didn't like") || msg.includes('hated')) {
         content += `- This is flagged as something to avoid for ${guest.firstName}\n`;
@@ -103,11 +168,11 @@ ${incomplete.length > 0 ? `\n**Camila:** ${incomplete.length} guest(s) still nee
       if (msg.includes('mentioned') || msg.includes('asked for') || msg.includes('wants')) {
         content += `- This is saved as an open request — make sure someone follows up\n`;
       }
-      content += `\n*Synced to guest profile database — visible to all staff instantly.*`;
-      dataSources = ['Guest Profiles'];
+      content += `\n*Synced to guest memory — visible to all staff instantly.*`;
+      dataSources = ['Guest Memory'];
     } else {
       content = `I'll save that note. Which guest is this about? Current guests:\n\n${guests.filter(g => rooms.some(r => r.currentGuest === g.id)).map((g) => `- **${g.firstName} ${g.lastName}** (${getGuestRoom(g.id)?.name})`).join('\n')}`;
-      dataSources = ['Guest Profiles'];
+      dataSources = ['Guest Memory'];
     }
   }
 
@@ -134,16 +199,15 @@ ${incomplete.length > 0 ? `\n**Camila:** ${incomplete.length} guest(s) still nee
       content = `## ${guest.firstName} ${guest.lastName}\n\n`;
       content += `**${guest.nationality}** · speaks ${guest.language} · ${guest.visitCount > 1 ? `visit #${guest.visitCount}` : 'first visit'} · prefers ${guest.communicationPreference}\n`;
       if (room) content += `**Room:** ${room.name} (${room.type}, floor ${room.floor})\n`;
-      if (res) content += `**Stay:** ${res.checkIn} → ${res.checkOut} · booked via ${res.source}\n`;
+      if (res) content += `**Stay:** ${res.checkIn} → ${res.checkOut} · booked via ${res.source} · CHF ${res.totalAmount}\n`;
       if (guest.tags.length > 0) content += `**Tags:** ${guest.tags.map(t => `\`${t}\``).join(' ')}\n`;
 
-      content += `\n### The Grill\n`;
+      content += `\n### Guest Memory\n`;
       if (guest.grill.celebrationPurpose) content += `- **Why they're here:** ${guest.grill.celebrationPurpose}\n`;
       if (guest.grill.dietaryRestrictions?.length) content += `- **Dietary:** ${guest.grill.dietaryRestrictions.join(', ')}\n`;
       if (guest.grill.interests?.length) content += `- **Interests:** ${guest.grill.interests.join(', ')}\n`;
       if (guest.grill.preferredRestaurants?.length) content += `- **Restaurants they've loved:** ${guest.grill.preferredRestaurants.join(', ')}\n`;
       if (guest.grill.dislikes?.length) content += `- **Avoid:** ${guest.grill.dislikes.join(', ')}\n`;
-      if (guest.grill.childrenInfo) content += `- **Family:** ${guest.grill.childrenInfo}\n`;
 
       if (guest.grill.notes.length > 0) {
         content += `\n### Staff notes\n`;
@@ -159,16 +223,16 @@ ${incomplete.length > 0 ? `\n**Camila:** ${incomplete.length} guest(s) still nee
 
       if (guest.visitCount > 1) {
         content += `\n### Returning guest insight\n`;
-        content += `${guest.firstName} has been here ${guest.visitCount} times (lifetime value: $${guest.lifetimeValue}). `;
+        content += `${guest.firstName} has been here ${guest.visitCount} times (lifetime value: CHF ${guest.lifetimeValue.toLocaleString()}). `;
         content += `Last visit: ${guest.lastVisit}. Any staff member can reference this history to make them feel remembered.`;
       }
-      dataSources = ['Guest Profiles', 'Opera PMS'];
+      dataSources = ['Guest Memory', 'Mews PMS'];
     } else {
       content = `Which guest? Here's who's at the hotel right now:\n\n${guests.filter(g => rooms.some(r => r.currentGuest === g.id)).map((g) => {
         const room = getGuestRoom(g.id);
         return `- **${g.firstName} ${g.lastName}** — ${room?.name} (${g.nationality}, ${g.grill.celebrationPurpose || 'leisure'})`;
       }).join('\n')}\n\n**Arriving soon:**\n${upcomingGuests.map((g) => `- **${g.firstName} ${g.lastName}** (${g.nationality})`).join('\n')}`;
-      dataSources = ['Guest Profiles'];
+      dataSources = ['Guest Memory'];
     }
   }
 
@@ -202,13 +266,13 @@ ${incomplete.length > 0 ? `\n**Camila:** ${incomplete.length} guest(s) still nee
       });
       content += `\n*When ${guest.firstName} goes, just tell me how it went and I'll remember for next time.*`;
     } else {
-      content = `## Local restaurants\n\n`;
+      content = `## Local restaurants — Crans-Montana\n\n`;
       restaurants.forEach((r) => {
         content += `- **${r.name}** — ${r.cuisine} (${r.priceRange}) · ${r.walkingMin} min walk\n`;
       });
       content += `\nTip: Ask me "recommendations for [guest name]" and I'll filter based on their dietary needs and what they've already tried.`;
     }
-    dataSources = ['Guest Profiles', 'Local Knowledge'];
+    dataSources = ['Guest Memory', 'Local Knowledge'];
   }
 
   // ---- OCCUPANCY ----
@@ -220,7 +284,7 @@ ${incomplete.length > 0 ? `\n**Camila:** ${incomplete.length} guest(s) still nee
     content = `**${occupied} of ${rooms.length} rooms** occupied (${Math.round((occupied / rooms.length) * 100)}%)\n\n`;
     content += `**Available now:** ${rooms.filter((r) => r.status === 'available').map((r) => `${r.name} (${r.type})`).join(', ')}\n\n`;
     if (maintenance > 0) content += `**Maintenance:** ${rooms.filter((r) => r.status === 'maintenance').map((r) => r.name).join(', ')}\n`;
-    dataSources = ['Opera PMS'];
+    dataSources = ['Mews PMS'];
   }
 
   // ---- TOMORROW'S ARRIVALS ----
@@ -235,7 +299,7 @@ ${incomplete.length > 0 ? `\n**Camila:** ${incomplete.length} guest(s) still nee
         const room = rooms.find((rm) => rm.id === r.roomId);
         if (g && room) {
           content += `### ${g.firstName} ${g.lastName} → ${room.name}\n`;
-          content += `${g.nationality} · ${g.language} · via ${r.source}\n`;
+          content += `${g.nationality} · ${g.language} · via ${r.source} · CHF ${r.totalAmount}\n`;
           content += `Pre-arrival: ${r.preArrivalComplete ? 'Ready' : '**Incomplete** — needs outreach today'}\n`;
           if (g.grill.notes.length > 0) {
             content += `Notes: ${g.grill.notes.join('; ')}\n`;
@@ -247,7 +311,7 @@ ${incomplete.length > 0 ? `\n**Camila:** ${incomplete.length} guest(s) still nee
         }
       });
     }
-    dataSources = ['Opera PMS', 'Guest Profiles'];
+    dataSources = ['Mews PMS', 'Guest Memory'];
   }
 
   // ---- PENDING SERVICES ----
@@ -281,7 +345,7 @@ ${incomplete.length > 0 ? `\n**Camila:** ${incomplete.length} guest(s) still nee
   }
 
   // ---- PRE-ARRIVAL ----
-  else if (msg.includes('pre-arrival') || msg.includes('pre arrival') || msg.includes('incomplete') || msg.includes('camila') || msg.includes('outreach')) {
+  else if (msg.includes('pre-arrival') || msg.includes('pre arrival') || msg.includes('incomplete') || msg.includes('marie') || msg.includes('outreach')) {
     const incomplete = getPreArrivalIncomplete();
     if (incomplete.length === 0) {
       content = 'All upcoming guests have complete profiles. Great work!';
@@ -291,13 +355,13 @@ ${incomplete.length > 0 ? `\n**Camila:** ${incomplete.length} guest(s) still nee
         const g = allGuests.find((guest) => guest.id === r.guestId);
         const room = rooms.find((rm) => rm.id === r.roomId);
         content += `### ${g?.firstName} ${g?.lastName}\n`;
-        content += `Arriving ${r.checkIn} → ${room?.name} · via ${r.source}\n`;
-        content += `**Missing:** celebration purpose, dietary info, interests\n\n`;
-        content += `**Suggested message:** "Hi ${g?.firstName}! We're so looking forward to welcoming you on ${r.checkIn}! I'd love to know a bit about you so we can make your stay special..."\n\n`;
+        content += `Arriving ${r.checkIn} → ${room?.name} · via ${r.source} · CHF ${r.totalAmount}\n`;
+        content += `**Missing:** dietary info, interests, special requests\n\n`;
+        content += `**Suggested message:** "Bonjour ${g?.firstName}! We're looking forward to welcoming you to Hotel Panorama on ${r.checkIn}! We'd love to know about any dietary preferences or special requests..."\n\n`;
       });
-      content += `\nAfter you chat with them, just tell me what you learned and I'll save it to their profile.`;
+      content += `\nAfter you chat with them, just tell me what you learned and I'll save it to their guest memory.`;
     }
-    dataSources = ['Opera PMS', 'Guest Profiles'];
+    dataSources = ['Mews PMS', 'Guest Memory'];
   }
 
   // ---- DIETARY / ALLERGIES ----
@@ -315,9 +379,9 @@ ${incomplete.length > 0 ? `\n**Camila:** ${incomplete.length} guest(s) still nee
         const room = getGuestRoom(g.id);
         content += `- **${g.firstName} ${g.lastName}** (${room?.name}) — ${g.grill.dietaryRestrictions.join(', ')}\n`;
       });
-      content += `\n**Kitchen team:** Please keep these visible during meal prep.`;
+      content += `\n**Jean-Pierre (Kitchen):** Please keep these visible during meal prep.`;
     }
-    dataSources = ['Guest Profiles'];
+    dataSources = ['Guest Memory'];
   }
 
   // ---- STAFF ----
@@ -335,7 +399,7 @@ ${incomplete.length > 0 ? `\n**Camila:** ${incomplete.length} guest(s) still nee
   }
 
   // ---- POLICIES ----
-  else if (msg.includes('check-in') || msg.includes('checkout') || msg.includes('wifi') || msg.includes('breakfast') || msg.includes('parking') || msg.includes('bike') || msg.includes('policy') || msg.includes('policies')) {
+  else if (msg.includes('check-in') || msg.includes('checkout') || msg.includes('wifi') || msg.includes('breakfast') || msg.includes('parking') || msg.includes('bike') || msg.includes('policy') || msg.includes('policies') || msg.includes('spa')) {
     content = Object.entries(hotelPolicies).map(([key, val]) =>
       `- **${key.charAt(0).toUpperCase() + key.slice(1)}:** ${val}`
     ).join('\n');
@@ -344,13 +408,13 @@ ${incomplete.length > 0 ? `\n**Camila:** ${incomplete.length} guest(s) still nee
 
   // ---- HELP ----
   else if (msg.includes('help') || msg.includes('what can you')) {
-    content = `### What I can do\n\n**Guest profiles**\n- "Tell me about James" — full profile with grill\n- "James loved the coffee tour" — I'll remember it\n- "Marie left half the breakfast" — noted for portions\n\n**Daily operations**\n- "Morning briefing" — what matters today\n- "Who's arriving tomorrow?" — with prep notes\n- "Pending services" — open tasks\n\n**Recommendations**\n- "Restaurant recommendations for Emma" — filtered by history\n- "Any dietary restrictions?" — kitchen prep\n\n**Quick answers**\n- "WiFi password" · "Breakfast hours" · "Checkout policy"\n- "Who's on duty?" · "Room occupancy"\n\n**The idea:** Talk to me like a colleague. I remember everything about every guest so your whole team stays in sync.`;
+    content = `### What I can do — 34 tools, 11 categories\n\n**Guest intelligence**\n- "Tell me about James" — full profile with guest memory\n- "James loved the fondue" — I'll remember it\n- "Sophie left half the breakfast" — noted for portions\n\n**Daily operations**\n- "Morning briefing" — what matters today\n- "Night audit" — revenue reconciliation\n- "Pending services" — open tasks\n\n**Revenue & strategy**\n- "Competitor rates" — live rates from LeCrans, Guarda Golf, Ambassador\n- "Upsell opportunities" — today's revenue potential\n- "Google reviews" — recent reviews with draft responses\n\n**Smart alerts**\n- "Smart alerts" — active flags and notifications\n\n**Recommendations**\n- "Restaurant recommendations for David" — filtered by history\n- "Any dietary restrictions?" — kitchen prep\n\n**Quick answers**\n- "WiFi" · "Breakfast hours" · "Checkout policy" · "Spa"\n- "Who's on duty?" · "Room occupancy"\n- "Who's arriving tomorrow?" — with prep notes\n\n**The idea:** Talk to me like a colleague. I remember everything about every guest so your whole team stays in sync.`;
     dataSources = [];
   }
 
   // ---- FALLBACK ----
   else {
-    content = `I'm not sure I caught that. Try:\n\n- **"Morning briefing"** — today's overview\n- **"Tell me about [guest name]"** — guest profile\n- **"[Guest] loved [something]"** — log a note\n- **"Pending services"** — open tasks\n- **"Help"** — everything I can do`;
+    content = `I'm not sure I caught that. Try:\n\n- **"Morning briefing"** — today's overview\n- **"Tell me about [guest name]"** — guest profile\n- **"Competitor rates"** — live market data\n- **"Night audit"** — revenue summary\n- **"[Guest] loved [something]"** — log a note\n- **"Help"** — all 34 tools`;
     dataSources = [];
   }
 

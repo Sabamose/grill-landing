@@ -1,11 +1,11 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence, useInView } from 'framer-motion';
-import { Sun, User, RefreshCw, Check } from 'lucide-react';
+import { Sun, Moon, User, RefreshCw, TrendingUp, Star, Bell, Check } from 'lucide-react';
 import Badge from '../ui/Badge';
 import { MODULES } from '../../lib/constants';
 import { staggerContainer, fadeUp } from '../../lib/animations';
 
-const iconMap = { Sun, User, RefreshCw };
+const iconMap = { Sun, Moon, User, RefreshCw, TrendingUp, Star, Bell };
 
 function BriefingDemo({ lines }) {
   const [visibleLines, setVisibleLines] = useState(0);
@@ -151,6 +151,9 @@ function SyncDemo({ systems }) {
 
 const demoComponents = {
   briefing: BriefingDemo,
+  audit: BriefingDemo,
+  competitor: BriefingDemo,
+  reviews: BriefingDemo,
   profiles: ProfilesDemo,
   sync: SyncDemo,
 };
@@ -202,7 +205,7 @@ export default function Modules() {
           {MODULES.map((mod) => {
             const Icon = iconMap[mod.icon];
             const Demo = demoComponents[mod.demo];
-            const demoProps = mod.demo === 'briefing' ? { lines: mod.lines }
+            const demoProps = mod.lines ? { lines: mod.lines }
               : mod.demo === 'profiles' ? { guests: mod.guests }
               : { systems: mod.systems };
 

@@ -51,7 +51,7 @@ export default function Navbar() {
 
             <div className="hidden md:block">
               <Button href="#waitlist" variant="primary" className="text-sm px-5 py-2.5">
-                Join Waitlist
+                Request Demo
               </Button>
             </div>
 
@@ -97,7 +97,7 @@ export default function Navbar() {
                   onClick={() => setMobileOpen(false)}
                   className="text-lg px-8 py-3 mt-4"
                 >
-                  Join Waitlist
+                  Request Demo
                 </Button>
               </motion.div>
             </motion.div>

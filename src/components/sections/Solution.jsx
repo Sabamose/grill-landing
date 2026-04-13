@@ -3,12 +3,13 @@ import { motion, AnimatePresence, useInView } from 'framer-motion';
 import {
   Brain, MessageSquare, Zap, Star, AlertTriangle,
   Check, Database, ArrowRight, ArrowUp, Sparkles, Gift,
+  LayoutGrid, ShieldCheck, Sun, TrendingUp,
 } from 'lucide-react';
 import Badge from '../ui/Badge';
 import { SOLUTION_FEATURES } from '../../lib/constants';
 import { staggerContainer, fadeUp, fadeRight } from '../../lib/animations';
 
-const iconMap = { Brain, MessageSquare, Zap };
+const iconMap = { Brain, MessageSquare, Zap, LayoutGrid, ShieldCheck, Sun, TrendingUp };
 
 /* ═══════════════════════════════════════════
    SOLUTION CHAT SCRIPT
@@ -21,49 +22,49 @@ const iconMap = { Brain, MessageSquare, Zap };
 const SOLUTION_SCRIPT = [
   {
     delay: 1400,
-    user: 'Who is the guest checking into Room 312?',
+    user: 'Who is checking into Suite 401?',
     typingDelay: 900,
     featureIndex: 0,
     response: [
-      { type: 'header', name: 'María García', badge: 'VIP · 3rd Stay', rating: '9.5' },
-      { type: 'alert', text: 'Shellfish allergy — all departments alerted' },
-      { type: 'prefs', items: ['High Floor', 'Quiet Room', 'Malbec', 'Black Coffee', 'No Peanuts'] },
-      { type: 'note', text: 'Celebrated anniversary on last visit. Very polite, appreciates personal touches.' },
+      { type: 'header', name: 'James Richardson', badge: 'VIP · 3rd Stay', rating: '9.2' },
+      { type: 'alert', text: 'Vegetarian — kitchen alerted' },
+      { type: 'prefs', items: ['Mountain View', 'Extra Pillows', 'Fendant du Valais', 'Skiing', 'High Floor'] },
+      { type: 'note', text: 'Celebrating 50th birthday this trip. Wife Sarah prefers white wine. Enjoys morning jogs around the golf course.' },
     ],
-    sources: ['Opera PMS', 'Guest History', 'Kitchen Notes'],
+    sources: ['Mews PMS', 'Guest Memory', 'Lightspeed POS'],
   },
   {
     delay: 3800,
-    user: 'What did she order at the restaurant last time?',
+    user: 'What are competitor rates right now?',
     typingDelay: 800,
-    featureIndex: 1,
+    featureIndex: 5,
     response: [
-      { type: 'subheader', text: 'Last visit — December 2024' },
+      { type: 'subheader', text: 'Crans-Montana — Live Rates' },
       { type: 'list', items: [
-        'Night 1: Grilled salmon with asparagus',
-        'Night 2: Mushroom risotto',
-        'Room service breakfast both mornings — black coffee, no sugar',
+        'LeCrans: Superior CHF 520 (+8% vs last week)',
+        'Guarda Golf: Superior CHF 480 (no change)',
+        'Crans Ambassador: Superior CHF 450 (-5%)',
       ] },
-      { type: 'insight', text: 'Tip: She avoids shellfish and peanuts. Safe options are already flagged for the kitchen.' },
+      { type: 'insight', text: 'Weekend gap: competitors add 15-20% Fri-Sun, we only add 10%. Opportunity to adjust.' },
     ],
-    sources: ['Restaurant POS', 'Room Service'],
+    sources: ['Competitor Intel', 'Rate Engine'],
   },
   {
     delay: 3500,
-    user: 'Any special dates coming up?',
+    user: 'Upgrade James to Panorama Suite — needs approval',
     typingDelay: 750,
-    featureIndex: 2,
+    featureIndex: 3,
     response: [
-      { type: 'highlight', icon: 'gift', text: 'Anniversary — March 15th (in 2 days!)' },
-      { type: 'text', text: 'Here\'s what I\'d suggest:' },
+      { type: 'highlight', icon: 'gift', text: 'Approval request sent to Saba (Manager)' },
+      { type: 'text', text: 'Upgrade details:' },
       { type: 'actions', items: [
-        'Complimentary dessert at dinner',
-        'Room upgrade to Suite 401 (her favorite)',
-        'Handwritten note from the GM',
+        'Junior Suite 401 → Panorama Suite 502',
+        'Revenue impact: +CHF 300/night (4 nights = CHF 1,200)',
+        'Justification: VIP 50th birthday, 3rd stay, CHF 4,200 LTV',
       ] },
-      { type: 'prompt', text: 'Should I prep these with the team?' },
+      { type: 'prompt', text: 'Manager will be notified. Waiting for approval...' },
     ],
-    sources: ['Guest Profile', 'Booking History'],
+    sources: ['Mews PMS', 'Approval Flow'],
   },
 ];
 
@@ -428,8 +429,8 @@ export default function Solution() {
             Meet <span className="text-gradient-copper">the Grill</span>
           </h2>
           <p className="mt-4 text-lg text-slate-light max-w-2xl mx-auto">
-            One intelligent profile that unifies every guest interaction across every system —
-            so your staff can deliver truly personal experiences.
+            34 tools across 11 categories — guest memory, competitor rates, approval flows,
+            action cards, and more. All in one chat your staff already knows how to use.
           </p>
         </motion.div>
 

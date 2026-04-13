@@ -4,6 +4,7 @@ import Hero from './components/sections/Hero';
 import StatsBar from './components/sections/StatsBar';
 import Problem from './components/sections/Problem';
 import Solution from './components/sections/Solution';
+import ToolGrid from './components/sections/ToolGrid';
 import PlatformDemo from './components/sections/PlatformDemo';
 import Architecture from './components/sections/Architecture';
 import LiveSync from './components/sections/LiveSync';
@@ -21,6 +22,7 @@ export default function App() {
         <StatsBar />
         <Problem />
         <Solution />
+        <ToolGrid />
         <PlatformDemo />
         <Architecture />
         <LiveSync />

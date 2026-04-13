@@ -17,45 +17,45 @@ import {
 const HERO_SCRIPT = [
   {
     delay: 1400,
-    user: 'Guest arriving — Elena Vasquez, Suite 201',
+    user: 'Guest arriving — James Richardson, Suite 401',
     typingDelay: 950,
     response: [
-      { type: 'header', name: 'Elena Vasquez', badge: 'VIP · 4th Stay', rating: '9.6' },
-      { type: 'alert', text: 'Tree nut allergy — kitchen alerted' },
-      { type: 'prefs', items: ['Morning sun', 'Extra pillows', 'Tempranillo', 'Quiet floor'] },
-      { type: 'insight', text: 'Anniversary of her first stay — consider a welcome gesture?' },
+      { type: 'header', name: 'James Richardson', badge: 'VIP · 3rd Stay', rating: '9.2' },
+      { type: 'alert', text: 'Vegetarian — kitchen alerted' },
+      { type: 'prefs', items: ['Mountain View', 'Extra Pillows', 'Fendant du Valais', 'High Floor'] },
+      { type: 'insight', text: '50th birthday during this stay — consider a welcome gesture?' },
     ],
-    sources: ['Opera PMS', 'Guest History'],
+    sources: ['Mews PMS', 'Guest Memory'],
   },
   {
     delay: 3800,
-    user: 'Her daughter turns 10 tomorrow',
+    user: 'His wife Sarah loves white wine — anything specific?',
     typingDelay: 850,
     response: [
-      { type: 'logged', text: 'Observation saved! Suggested actions:' },
+      { type: 'logged', text: 'Found in guest memory:' },
       { type: 'actions', items: [
-        'Birthday cake — tree-nut free',
-        'Balloon decoration in Suite 201',
-        'Reserve poolside cabana (loved it last time)',
+        'Fendant du Valais was a hit last visit',
+        'Stock minibar with local white wines',
+        'She also loved the hot stone massage at the spa',
       ] },
-      { type: 'prompt', text: 'Want me to notify the team?' },
+      { type: 'prompt', text: 'Want me to prep the room and notify the team?' },
     ],
-    sources: ['Observation Engine', 'Stay History'],
+    sources: ['Guest Memory', 'Lightspeed POS'],
   },
   {
     delay: 3200,
-    user: 'Yes, send it to everyone',
+    user: 'Yes, prep everything',
     typingDelay: 750,
     response: [
-      { type: 'text', text: 'Done! Notifications sent:' },
+      { type: 'text', text: 'Done! Actions taken:' },
       { type: 'checks', items: [
-        'Housekeeping — decoration + extra pillows',
-        'Kitchen — nut-free birthday cake prepped',
-        'Minibar — Tempranillo in, nuts removed',
+        'Housekeeping — extra pillows + birthday card placed',
+        'Kitchen — vegetarian menu flagged for all meals',
+        'Minibar — Fendant du Valais stocked, CHF 45',
       ] },
       { type: 'confirmed', text: 'All teams confirmed. Profile updated.' },
     ],
-    sources: ['WhatsApp', 'Staff App'],
+    sources: ['Mews PMS', 'Staff App'],
   },
 ];
 
@@ -473,9 +473,9 @@ export default function Hero() {
               variants={fadeUp}
               className="mt-6 text-lg sm:text-xl text-slate-light max-w-xl mx-auto lg:mx-0 leading-relaxed"
             >
-              Grill unifies your hotel's scattered guest data into one intelligent
-              platform — so every staff member knows every guest, before they walk
-              in the door.
+              The AI staff agent for boutique hotels. 34 tools in one chat — from
+              guest memory to competitor rates. Your team knows every guest before
+              they walk in the door.
             </motion.p>
 
             <motion.div
@@ -483,7 +483,7 @@ export default function Hero() {
               className="mt-10 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
             >
               <Button href="#waitlist" glow className="text-base px-8 py-3.5">
-                Join the Waitlist
+                Request Demo
               </Button>
               <Button href="#platform" variant="ghost" className="text-base px-8 py-3.5">
                 See it in action

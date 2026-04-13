@@ -52,31 +52,31 @@ function DashboardTab() {
   const briefingItems = [
     {
       color: '#5B8BD4', icon: Users,
-      title: 'James Richardson — Wedding Anniversary',
-      detail: 'The Laura (Suite) · 3rd visit · Prep welcome note + complimentary dessert. Wife Sarah prefers white wine.',
+      title: 'James Richardson — 50th Birthday',
+      detail: 'Suite 401 · 3rd visit · Prep birthday card + complimentary dessert. Wife Sarah loves Fendant du Valais.',
     },
     {
       color: '#D4974B', icon: AlertTriangle,
-      title: 'Marie Dubois — Birthday coming up',
-      detail: 'The Lucho (Suite) · Cake surprise requested. Vegetarian — confirm with kitchen.',
+      title: 'Marco Rossi — Checkout today',
+      detail: 'Deluxe 301 · Geneva airport transfer at 2pm. Gluten-free. Interested in returning for anniversary dinner — follow up!',
     },
     {
       color: '#D4634B', icon: Clock,
-      title: 'Carlos Mendoza — Checkout today',
-      detail: 'The Helen · Airport transfer at 3pm. Interested in 15-person company event — follow up!',
+      title: 'Sarah Thompson — Press Visit',
+      detail: 'Superior 105 · Condé Nast Traveler journalist. Strict vegan. Photographing property — ensure rooms spotless.',
     },
     {
       color: '#5CB176', icon: Coffee,
-      title: 'Isabella & Marco — Honeymoon',
-      detail: 'The María · Rose petals arranged. Dinner at Andrés Carne de Res Saturday — remind to leave by 5pm.',
+      title: 'Pierre Lambert — VIP Local',
+      detail: 'Panorama Suite 501 · Our highest LTV guest (CHF 8,900). Vineyard owner. Anniversary dinner at Chetzeron Saturday.',
     },
   ];
 
   const guestTips = [
-    { guest: 'James Richardson', tip: 'Gluten-free. Loves morning jogs — suggest park route. DO NOT re-recommend Leo Cocina (already been twice).' },
-    { guest: 'Yuki Tanaka', tip: 'Dairy-free. Interested in hotel cooking class — confirm kitchen can accommodate. Appreciates written info.' },
-    { guest: 'Emma Wilson', tip: 'Vegan (friends are not). Two friends arriving tomorrow — prep rooms. Rebook Thai massage for Wednesday.' },
-    { guest: 'Ana García', tip: 'Pescatarian. Writing retreat — needs quiet. Late breakfast ~10am. Recommended Luvina bookshop café.' },
+    { guest: 'James Richardson', tip: 'Vegetarian. Loves morning jogs around the golf course. Wife Sarah — stock Fendant du Valais. Birthday gesture today.' },
+    { guest: 'Yuki Tanaka', tip: 'Senior VP at Tokyo Dynamics — corporate partnership potential. Stock Japanese green tea. Needs quiet workspace + strong WiFi.' },
+    { guest: 'Sarah Thompson', tip: 'Condé Nast Traveler journalist — media coverage. Strict vegan. Wants behind-the-scenes story. Handle with care.' },
+    { guest: 'Pierre Lambert', tip: 'Highest LTV guest (CHF 8,900). Always gets Panorama Suite. Wife Anne\'s birthday in April — start planning now.' },
   ];
 
   return (
@@ -86,7 +86,7 @@ function DashboardTab() {
         <h3 className="font-serif text-[20px] sm:text-[24px] text-[#1A1A1A]">Good morning, team</h3>
         <p className="text-[12px] text-[#6B6B6B] mt-1 flex items-center gap-1.5 flex-wrap">
           {today} · <span className="font-medium text-[#1A1A1A]">{occupiedRooms} of {rooms.length}</span> rooms occupied ·
-          <Cloud className="w-3 h-3 inline" /> 22°C, afternoon rain likely
+          <Cloud className="w-3 h-3 inline" /> 4°C, clear skies — great skiing conditions
         </p>
       </div>
 
@@ -164,7 +164,7 @@ function DashboardTab() {
             const g = room.currentGuest ? guests.find(g => g.id === room.currentGuest) : null;
             return (
               <div key={room.id} className="rounded-md p-1.5 text-center cursor-default hover:scale-105 transition-transform" style={{ background: s.bg }}>
-                <p className="text-[10px] font-semibold" style={{ color: s.text }}>{room.name.replace('The ', '')}</p>
+                <p className="text-[10px] font-semibold" style={{ color: s.text }}>{room.name.replace(/^(Classic|Superior|Deluxe|Junior Suite|Panorama Suite) /, '')}</p>
                 <p className="text-[9px] truncate" style={{ color: s.text }}>
                   {g ? `${g.firstName.charAt(0)}. ${g.lastName}` : s.label}
                 </p>
@@ -234,17 +234,17 @@ const DEMO_SCRIPT = [
   },
   {
     delay: 5000,
-    user: 'James loved the local coffee tour yesterday',
+    user: 'James loved the cheese fondue at Le Bistrot',
     typingDelay: 600,
   },
 ];
 
 const CHAT_SUGGESTIONS = [
   { text: 'Morning briefing', sub: "Today's overview" },
-  { text: 'Tell me about James Richardson', sub: 'Guest profile + grill' },
-  { text: 'Marie left half the breakfast', sub: 'Log an observation' },
-  { text: 'Restaurant recommendations for Emma', sub: 'Based on her history' },
-  { text: 'Pre-arrival status', sub: "Who needs outreach" },
+  { text: 'Tell me about James Richardson', sub: 'Guest profile + memory' },
+  { text: 'Competitor rates', sub: 'Live market data' },
+  { text: 'Restaurant recommendations for Marco', sub: 'Based on his history' },
+  { text: 'Night audit', sub: 'Revenue reconciliation' },
   { text: 'Any dietary restrictions?', sub: 'Kitchen prep' },
 ];
 
@@ -499,36 +499,37 @@ function ChatInput({ input, setInput, onSend, isTyping, inputRef, placeholder, d
    ═══════════════════════════════════════════ */
 const PREP_GUESTS = [
   {
-    id: 'guest-009', initials: 'SC', name: 'Sophie Clarke', nationality: 'British',
-    room: 'The Luisa', source: 'Booking.com', daysUntil: 1,
-    tags: ['group', 'first-timer'],
-    suggestions: [
-      'Friend of Emma Wilson (already checked in at The Valentina)',
-      'Group of 3 — coordinate activities with Emma and Rachel',
-      'First time visiting — share welcome guide with local tips',
-    ],
-    whatsappDraft: "Hi Sophie! 👋 This is Camila from Hotel Mirador. We're so excited to welcome you tomorrow! Your friend Emma is already here and loving it. Quick question — any dietary preferences or special requests we should know about?",
-  },
-  {
-    id: 'guest-010', initials: 'RH', name: 'Rachel Hughes', nationality: 'British',
-    room: 'The Restrepo', source: 'Booking.com', daysUntil: 1,
-    tags: ['group', 'first-timer'],
-    suggestions: [
-      'Also part of Emma Wilson\'s girls trip',
-      'Pre-arrival questionnaire not completed — needs outreach',
-    ],
-    whatsappDraft: "Hi Rachel! 😊 Camila here from Hotel Mirador. Can't wait to welcome you tomorrow with Sophie and Emma! Is there anything special we can prepare for your stay?",
-  },
-  {
-    id: 'guest-011', initials: 'DH', name: 'David Hoffmann', nationality: 'German',
-    room: 'The Helen', source: 'Expedia', daysUntil: 2,
+    id: 'guest-009', initials: 'AB', name: 'Anna Bergmann', nationality: 'Swiss',
+    room: 'Classic 101', source: 'Booking.com', daysUntil: 1,
     tags: ['first-timer'],
     suggestions: [
-      'Allergic to feather pillows — ensure synthetic pillows in room',
-      'OTA booking — may not know much about us. Share what makes us special.',
-      'German speaker — consider if language accommodations needed',
+      'Booked via Booking.com — send personalized welcome email',
+      'First time in Crans-Montana — share local tips and ski conditions',
+      'No dietary info on file — ask during outreach',
     ],
-    whatsappDraft: "Hello David! This is Camila from Hotel Mirador. We're looking forward to your visit! I noticed you mentioned a feather pillow allergy — we've already prepared hypoallergenic bedding for you. Is there anything else we can do to make your stay perfect?",
+    whatsappDraft: "Bonjour Anna! This is Marie from Hotel Panorama in Crans-Montana. We're looking forward to welcoming you tomorrow! Quick question — any dietary preferences or special requests we should know about? The ski conditions are excellent right now!",
+  },
+  {
+    id: 'guest-010', initials: 'TW', name: 'Thomas Weber', nationality: 'German',
+    room: 'Classic 102', source: 'Booking.com', daysUntil: 1,
+    tags: ['first-timer', 'group'],
+    suggestions: [
+      'Traveling with family of 4 — needs connecting rooms',
+      'Pre-arrival questionnaire not completed — needs outreach',
+      'German speaker — communicate in German if possible',
+    ],
+    whatsappDraft: "Hallo Thomas! Marie hier vom Hotel Panorama. Wir freuen uns auf Ihren Besuch morgen mit der Familie! Wir haben verbundene Zimmer für Sie vorbereitet. Gibt es besondere Wünsche für Ihren Aufenthalt?",
+  },
+  {
+    id: 'guest-011', initials: 'CD', name: 'Claire Dubois', nationality: 'French',
+    room: 'Junior Suite 303', source: 'Expedia', daysUntil: 2,
+    tags: ['first-timer'],
+    suggestions: [
+      'Celebrating retirement — plan a special surprise',
+      'OTA booking — may not know our amenities. Share what makes us special.',
+      'French speaker — communicate in French',
+    ],
+    whatsappDraft: "Bonjour Claire! C'est Marie de l'Hôtel Panorama à Crans-Montana. Félicitations pour votre retraite! Nous avons hâte de vous accueillir. Y a-t-il quelque chose de spécial que nous pouvons préparer pour célébrer cette occasion?",
   },
 ];
 
@@ -711,17 +712,17 @@ function Section({ title, icon: Icon, children }) {
    SIDEBAR
    ═══════════════════════════════════════════ */
 const CONNECTED_SYSTEMS = [
-  { name: 'Opera PMS', logo: '/logos/opera.svg' },
+  { name: 'Mews PMS', logo: '/logos/mews.svg' },
+  { name: 'Lightspeed POS', logo: '/logos/lightspeed.svg' },
+  { name: 'Google Reviews', logo: '/logos/google-reviews.svg' },
   { name: 'Booking.com', logo: '/logos/booking.svg' },
-  { name: 'Stripe', logo: '/logos/stripe.svg' },
-  { name: 'WhatsApp', logo: '/logos/whatsapp.svg' },
 ];
 
 function Sidebar({ activeTab, onTabChange }) {
   return (
     <div className="hidden sm:flex h-full w-[170px] lg:w-[190px] flex-col bg-white border-r border-[#EBEBEB] shrink-0">
       <div className="px-3.5 pt-4 pb-3">
-        <h1 className="font-serif text-[15px] text-[#1A1A1A]">Hotel Mirador</h1>
+        <h1 className="font-serif text-[15px] text-[#1A1A1A]">Hotel Panorama</h1>
         <p className="text-[9px] text-[#A3A3A3] mt-0.5 tracking-wider uppercase">Staff Assistant</p>
       </div>
 

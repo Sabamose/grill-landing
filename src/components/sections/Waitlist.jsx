@@ -79,11 +79,11 @@ export default function Waitlist() {
           className="text-center"
         >
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">
-            Ready to give your hotel<br />
-            <span className="text-gradient-copper">a memory?</span>
+            Ready to give your staff<br />
+            <span className="text-gradient-copper">superpowers?</span>
           </h2>
           <p className="text-lg text-slate-light mb-10 max-w-lg mx-auto">
-            Join the waitlist and be among the first hotels to transform guest experiences with Grill.
+            See how Grill's 34 tools transform your hotel operations. Request a personalized demo with your hotel's data.
           </p>
 
           <div className="relative max-w-md mx-auto">
@@ -127,7 +127,7 @@ export default function Waitlist() {
                     ) : (
                       <>
                         <Send size={16} />
-                        Join Waitlist
+                        Request Demo
                       </>
                     )}
                   </Button>
@@ -156,9 +156,9 @@ export default function Waitlist() {
                   >
                     <Check size={28} className="text-copper" />
                   </motion.div>
-                  <h3 className="text-xl font-semibold mb-2">You're on the list!</h3>
+                  <h3 className="text-xl font-semibold mb-2">Demo requested!</h3>
                   <p className="text-sm text-slate-light">
-                    We'll be in touch soon. Get ready to transform your guest experience.
+                    We'll be in touch within 24 hours with a personalized demo for your hotel.
                   </p>
                 </motion.div>
               )}
