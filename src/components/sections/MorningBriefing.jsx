@@ -14,7 +14,7 @@ const viewport = { once: true, amount: 0.25 };
 
 export default function MorningBriefing() {
   return (
-    <section id="day-in-the-life" className="bg-cream text-ink py-24 lg:py-32">
+    <section id="day-in-the-life" className="bg-cream text-ink py-16 sm:py-24 lg:py-32">
       <div className="container-editorial">
         <motion.div
           variants={staggerContainer}

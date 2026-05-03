@@ -18,7 +18,7 @@ export default function ActionCardCompare() {
   return (
     <section
       id="action-cards"
-      className="bg-cream text-ink py-24 lg:py-32 border-t"
+      className="bg-cream text-ink py-16 sm:py-24 lg:py-32 border-t"
       style={{ borderColor: TONE.border }}
     >
       <div className="container-editorial">

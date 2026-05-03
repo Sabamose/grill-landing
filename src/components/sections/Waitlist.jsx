@@ -33,7 +33,7 @@ export default function Waitlist() {
   return (
     <section
       id="waitlist"
-      className="bg-cream text-ink py-24 lg:py-32 border-t border-[#EBEBEB]"
+      className="bg-cream text-ink py-16 sm:py-24 lg:py-32 border-t border-[#EBEBEB]"
     >
       <div className="container-editorial">
         <div className="max-w-[680px] mx-auto text-center">

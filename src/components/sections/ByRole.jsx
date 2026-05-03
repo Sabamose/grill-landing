@@ -710,7 +710,7 @@ function RoleSpread({ n, role, ask, capabilities, side = 'left', children }) {
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, margin: '-20% 0px -20% 0px' }}
-      className="grid grid-cols-1 lg:grid-cols-[0.85fr_1.15fr] gap-10 lg:gap-16 items-center py-20 lg:py-32 lg:min-h-[80vh]"
+      className="grid grid-cols-1 lg:grid-cols-[0.85fr_1.15fr] gap-8 sm:gap-12 lg:gap-16 items-center py-12 sm:py-20 lg:py-32 lg:min-h-[80vh]"
     >
       <motion.div variants={fadeUp} className={reverse ? 'lg:order-2' : ''}>
         <div className="flex items-baseline gap-3 mb-5">
@@ -754,7 +754,7 @@ export default function ByRole() {
   return (
     <section
       id="by-role"
-      className="bg-cream text-ink py-24 lg:py-32 border-t border-b"
+      className="bg-cream text-ink py-16 sm:py-24 lg:py-32 border-t border-b"
       style={{ borderColor: T.border }}
     >
       <div className="container-editorial">

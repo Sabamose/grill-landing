@@ -349,7 +349,7 @@ function HeroChat() {
 
 export default function Hero() {
   return (
-    <section className="relative min-h-screen flex items-center pt-28 pb-16 bg-cream text-ink">
+    <section className="relative min-h-screen flex items-center pt-24 sm:pt-28 pb-12 sm:pb-16 bg-cream text-ink">
       <div className="container-editorial w-full">
         <motion.div
           variants={staggerContainer}
@@ -371,7 +371,7 @@ export default function Hero() {
 
             <motion.h1
               variants={blurIn}
-              className="font-serif text-[44px] sm:text-[56px] lg:text-[64px] xl:text-[72px] leading-[1.04] tracking-[-0.02em] text-balance"
+              className="font-serif text-[36px] min-[480px]:text-[44px] sm:text-[56px] lg:text-[64px] xl:text-[72px] leading-[1.05] tracking-[-0.02em] text-balance"
             >
               We make your team<br />
               <span className="italic" style={{ color: '#A0734E' }}>unforgettable</span>,<br />

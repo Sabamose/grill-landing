@@ -6,7 +6,7 @@ const viewport = { once: true, amount: 0.25 };
 
 export default function WhatIsGrill() {
   return (
-    <section id="what-is-grill" className="bg-cream text-ink py-24 lg:py-32">
+    <section id="what-is-grill" className="bg-cream text-ink py-16 sm:py-24 lg:py-32">
       <motion.div
         variants={staggerContainer}
         initial="hidden"
