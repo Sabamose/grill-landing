@@ -1,44 +1,12 @@
-import { useState, useRef, useCallback, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Send, Check, Shield, Clock } from 'lucide-react';
-import Button from '../ui/Button';
 import { submitWaitlist, validateEmail } from '../../lib/emailService';
-import { fadeUp } from '../../lib/animations';
-
-function ConfettiParticle({ index }) {
-  const angle = (index / 20) * Math.PI * 2;
-  const distance = 80 + Math.random() * 80;
-  const size = 4 + Math.random() * 6;
-  const colors = ['#C77B3C', '#D4924F', '#A8652F', '#FAF7F2', '#F0EBE3'];
-  const color = colors[index % colors.length];
-
-  return (
-    <motion.div
-      initial={{ x: 0, y: 0, scale: 1, opacity: 1 }}
-      animate={{
-        x: Math.cos(angle) * distance,
-        y: Math.sin(angle) * distance - 40,
-        scale: 0,
-        opacity: 0,
-        rotate: Math.random() * 720,
-      }}
-      transition={{ duration: 0.8 + Math.random() * 0.4, ease: 'easeOut' }}
-      style={{
-        position: 'absolute',
-        width: size,
-        height: size,
-        borderRadius: Math.random() > 0.5 ? '50%' : '2px',
-        backgroundColor: color,
-      }}
-    />
-  );
-}
 
 export default function Waitlist() {
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState('idle'); // idle | loading | success | error
   const [errorMsg, setErrorMsg] = useState('');
-  const [showConfetti, setShowConfetti] = useState(false);
   const inputRef = useRef(null);
 
   const handleSubmit = async (e) => {
@@ -53,12 +21,9 @@ export default function Waitlist() {
     }
 
     setStatus('loading');
-
     try {
       await submitWaitlist(email);
       setStatus('success');
-      setShowConfetti(true);
-      setTimeout(() => setShowConfetti(false), 1500);
     } catch {
       setStatus('error');
       setErrorMsg('Something went wrong. Please try again.');
@@ -66,37 +31,32 @@ export default function Waitlist() {
   };
 
   return (
-    <section id="waitlist" className="py-24 lg:py-32 relative overflow-hidden">
-      {/* Background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-copper/3 to-transparent pointer-events-none" />
+    <section
+      id="waitlist"
+      className="bg-cream text-ink py-24 lg:py-32 border-t border-[#EBEBEB]"
+    >
+      <div className="container-editorial">
+        <div className="max-w-[680px] mx-auto text-center">
+          <div className="label-mono mb-6">◆ Request access</div>
 
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center"
-        >
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">
-            Ready to give your staff<br />
-            <span className="text-gradient-copper">superpowers?</span>
+          <h2 className="font-serif text-[40px] sm:text-[48px] lg:text-[56px] leading-[1.06] tracking-[-0.015em] text-balance mb-6">
+            Quietly transform<br />
+            how your team remembers.
           </h2>
-          <p className="text-lg text-slate-light mb-10 max-w-lg mx-auto">
-            See how Grill's 34 tools transform your hotel operations. Request a personalized demo with your hotel's data.
+
+          <p className="text-[16px] sm:text-[17px] leading-[1.7] max-w-[520px] mx-auto mb-10 text-[#6B6B6B]">
+            We're onboarding a small group of boutique hotels this season.
+            Tell us where you operate and we'll be in touch with a personalised
+            demo on your own data.
           </p>
 
-          <div className="relative max-w-md mx-auto">
+          <div className="relative max-w-[460px] mx-auto">
             <AnimatePresence mode="wait">
               {status !== 'success' ? (
                 <motion.form
                   key="form"
                   onSubmit={handleSubmit}
-                  variants={fadeUp}
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={{ once: true }}
-                  animate={status === 'error' ? { x: [0, -8, 8, -8, 8, 0] } : {}}
+                  animate={status === 'error' ? { x: [0, -6, 6, -6, 6, 0] } : {}}
                   transition={status === 'error' ? { duration: 0.4 } : undefined}
                   className="flex flex-col sm:flex-row gap-3"
                 >
@@ -105,60 +65,50 @@ export default function Waitlist() {
                     type="email"
                     value={email}
                     onChange={(e) => { setEmail(e.target.value); setStatus('idle'); setErrorMsg(''); }}
-                    placeholder="your@email.com"
-                    className={`flex-1 px-5 py-3.5 rounded-lg bg-charcoal-light text-cream placeholder:text-slate text-sm outline-none transition-all duration-300 border ${
+                    placeholder="your@hotel.com"
+                    className={`flex-1 px-5 py-3.5 rounded-full bg-white text-ink placeholder:text-[#A3A3A3] text-[14px] outline-none transition-all duration-300 border ${
                       status === 'error'
-                        ? 'border-red-500/50 focus:border-red-500'
-                        : 'border-cream/10 focus:border-copper/50'
+                        ? 'border-[#D4634B]'
+                        : 'border-[#EBEBEB] focus:border-ink'
                     }`}
                   />
-                  <Button
+                  <button
                     type="submit"
                     disabled={status === 'loading'}
-                    glow={status === 'idle'}
-                    className="px-8 py-3.5 whitespace-nowrap"
+                    className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full bg-ink text-white text-[14px] font-medium hover:bg-[#2A2A2A] transition-colors disabled:opacity-60 cursor-pointer whitespace-nowrap"
                   >
                     {status === 'loading' ? (
                       <motion.div
                         animate={{ rotate: 360 }}
                         transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-                        className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full"
+                        className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full"
                       />
                     ) : (
                       <>
-                        <Send size={16} />
-                        Request Demo
+                        <Send size={14} />
+                        Request demo
                       </>
                     )}
-                  </Button>
+                  </button>
                 </motion.form>
               ) : (
                 <motion.div
                   key="success"
-                  initial={{ opacity: 0, scale: 0.9 }}
+                  initial={{ opacity: 0, scale: 0.96 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  className="text-center py-8 relative"
+                  className="text-center py-8"
                 >
-                  {/* Confetti burst */}
-                  {showConfetti && (
-                    <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
-                      {Array.from({ length: 20 }).map((_, i) => (
-                        <ConfettiParticle key={i} index={i} />
-                      ))}
-                    </div>
-                  )}
-
                   <motion.div
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
-                    transition={{ type: 'spring', stiffness: 300, delay: 0.1 }}
-                    className="w-16 h-16 rounded-full bg-copper/20 flex items-center justify-center mx-auto mb-4"
+                    transition={{ type: 'spring', stiffness: 280, delay: 0.1 }}
+                    className="w-14 h-14 rounded-full bg-[#F3E8DE] flex items-center justify-center mx-auto mb-4"
                   >
-                    <Check size={28} className="text-copper" />
+                    <Check size={24} className="text-[#A0734E]" />
                   </motion.div>
-                  <h3 className="text-xl font-semibold mb-2">Demo requested!</h3>
-                  <p className="text-sm text-slate-light">
-                    We'll be in touch within 24 hours with a personalized demo for your hotel.
+                  <h3 className="font-serif text-[22px] mb-2">Demo requested</h3>
+                  <p className="text-[14px] text-[#6B6B6B]">
+                    We'll be in touch within 24 hours.
                   </p>
                 </motion.div>
               )}
@@ -166,35 +116,28 @@ export default function Waitlist() {
 
             {errorMsg && (
               <motion.p
-                initial={{ opacity: 0, y: -5 }}
+                initial={{ opacity: 0, y: -4 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="text-xs text-red-400 mt-2 text-left sm:text-center"
+                className="text-[12px] mt-3 text-[#D4634B] text-center"
               >
                 {errorMsg}
               </motion.p>
             )}
           </div>
 
-          {/* Trust signals */}
           {status !== 'success' && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.3 }}
-              className="flex items-center justify-center gap-6 mt-6"
-            >
-              <span className="flex items-center gap-1.5 text-xs text-slate-light">
-                <Shield size={12} className="text-copper/50" />
+            <div className="flex items-center justify-center gap-7 mt-8 label-mono" style={{ fontSize: 10 }}>
+              <span className="flex items-center gap-1.5">
+                <Shield size={11} className="text-[#A0734E]" />
                 No spam, ever
               </span>
-              <span className="flex items-center gap-1.5 text-xs text-slate-light">
-                <Clock size={12} className="text-copper/50" />
-                Response within 24h
+              <span className="flex items-center gap-1.5">
+                <Clock size={11} className="text-[#A0734E]" />
+                Reply within 24h
               </span>
-            </motion.div>
+            </div>
           )}
-        </motion.div>
+        </div>
       </div>
     </section>
   );

@@ -1,14 +1,10 @@
 import { useState, useEffect, useRef } from 'react';
-import { motion, useMotionValue, useTransform, AnimatePresence } from 'framer-motion';
-import Button from '../ui/Button';
-import Badge from '../ui/Badge';
-import { useTypewriter } from '../../hooks/useTypewriter';
-import { HERO_WORDS } from '../../lib/constants';
-import { blurIn, staggerContainer, fadeUp } from '../../lib/animations';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   Sparkles, AlertTriangle, Check, Database,
   ArrowRight, ArrowUp, Star,
 } from 'lucide-react';
+import { blurIn, fadeUp, staggerContainer } from '../../lib/animations';
 
 /* ═══════════════════════════════════════════
    CHAT DEMO SCRIPT — CHECK-IN SCENARIO
@@ -59,15 +55,10 @@ const HERO_SCRIPT = [
   },
 ];
 
-function wait(ms) {
-  return new Promise(r => setTimeout(r, ms));
-}
+const wait = (ms) => new Promise(r => setTimeout(r, ms));
 
 /* ═══════════════════════════════════════════
-   RESPONSE BLOCK — CASA LEGADO LIGHT THEME
-   Colors: #1A1A1A text, #6B6B6B secondary,
-   #C8956C accent, #A0734E accent-text,
-   #F3E8DE accent-soft, #A3A3A3 muted
+   RESPONSE BLOCK
    ═══════════════════════════════════════════ */
 
 function ResponseBlock({ block, index }) {
@@ -84,8 +75,8 @@ function ResponseBlock({ block, index }) {
             {block.badge}
           </span>
           {block.rating && (
-            <span className="flex items-center gap-0.5 text-[10px] text-[#D4974B] ml-auto">
-              <Star size={9} className="fill-[#D4974B]" />
+            <span className="flex items-center gap-0.5 text-[10px] text-[#A0734E] ml-auto">
+              <Star size={9} className="fill-[#C8956C] text-[#C8956C]" />
               {block.rating}
             </span>
           )}
@@ -94,7 +85,7 @@ function ResponseBlock({ block, index }) {
 
       {block.type === 'alert' && (
         <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[#FDF0ED] border border-[#D4634B]/15 mb-2">
-          <AlertTriangle size={11} className="text-[#D4634B] shrink-0 animate-pulse" />
+          <AlertTriangle size={11} className="text-[#D4634B] shrink-0" />
           <span className="text-[11px] text-[#D4634B] font-medium">{block.text}</span>
         </div>
       )}
@@ -104,7 +95,7 @@ function ResponseBlock({ block, index }) {
           {block.items.map((item, i) => (
             <motion.span
               key={item}
-              initial={{ opacity: 0, scale: 0.85 }}
+              initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: index * 0.12 + 0.05 + i * 0.08 }}
               className="text-[10px] px-2 py-0.5 rounded-full bg-[#F3E8DE] text-[#A0734E] border border-[#C8956C]/15"
@@ -182,124 +173,88 @@ function ResponseBlock({ block, index }) {
 }
 
 /* ═══════════════════════════════════════════
-   HERO CHAT — CASA LEGADO UI, BROWSER FRAME
-   Light theme (#FAFAF8), only chat, no sidebar
+   HERO CHAT — light, editorial, browser frame
    ═══════════════════════════════════════════ */
 
 function HeroChat() {
   const [messages, setMessages] = useState([]);
   const [typingText, setTypingText] = useState('');
   const [isThinking, setIsThinking] = useState(false);
-  const [activeSources, setActiveSources] = useState(null);
   const [fading, setFading] = useState(false);
   const chatRef = useRef(null);
 
   useEffect(() => {
-    if (chatRef.current) {
-      chatRef.current.scrollTop = chatRef.current.scrollHeight;
-    }
+    if (chatRef.current) chatRef.current.scrollTop = chatRef.current.scrollHeight;
   }, [messages, typingText, isThinking]);
 
   useEffect(() => {
     let cancelled = false;
-
     const run = async () => {
       while (!cancelled) {
-        setMessages([]);
-        setTypingText('');
-        setIsThinking(false);
-        setActiveSources(null);
-        setFading(false);
-
-        await wait(1200);
-        if (cancelled) return;
+        setMessages([]); setTypingText(''); setIsThinking(false); setFading(false);
+        await wait(1200); if (cancelled) return;
 
         for (let i = 0; i < HERO_SCRIPT.length; i++) {
           if (cancelled) return;
           const step = HERO_SCRIPT[i];
+          await wait(step.delay); if (cancelled) return;
 
-          await wait(step.delay);
-          if (cancelled) return;
-
-          // Type user message char by char
           for (let c = 0; c <= step.user.length; c++) {
             if (cancelled) return;
             setTypingText(step.user.slice(0, c));
             await wait(25 + Math.random() * 35);
           }
-          await wait(280);
-          if (cancelled) return;
+          await wait(280); if (cancelled) return;
 
-          // Send
           setTypingText('');
           setMessages(prev => [...prev, { id: `u-${i}`, role: 'user', content: step.user }]);
-
-          // Thinking
           setIsThinking(true);
-          await wait(step.typingDelay);
-          if (cancelled) return;
+          await wait(step.typingDelay); if (cancelled) return;
 
-          // Response
           setIsThinking(false);
           setMessages(prev => [...prev, {
-            id: `r-${i}`,
-            role: 'assistant',
-            blocks: step.response,
-            sources: step.sources,
+            id: `r-${i}`, role: 'assistant',
+            blocks: step.response, sources: step.sources,
           }]);
-          setActiveSources(step.sources);
-
           await wait(900);
         }
 
         if (cancelled) return;
-        await wait(5000);
-        if (cancelled) return;
-
+        await wait(5000); if (cancelled) return;
         setFading(true);
         await wait(600);
       }
     };
-
     run();
     return () => { cancelled = true; };
   }, []);
 
   return (
-    <motion.div variants={fadeUp} className="w-full max-w-[540px] mx-auto lg:mx-0 relative">
-      {/* Glow behind browser */}
-      <div className="absolute -inset-4 bg-gradient-to-br from-copper/15 via-copper/8 to-transparent rounded-3xl blur-2xl pointer-events-none" />
-
-      <div className="relative rounded-xl overflow-hidden shadow-[0_25px_60px_-12px_rgba(0,0,0,0.5)] border border-cream/[0.08]">
-        {/* ─── Browser Chrome ─── */}
-        <div className="flex items-center gap-2 px-4 py-2 bg-[#2A2A2A] border-b border-white/5">
-          <div className="flex gap-1.5">
-            <div className="w-2.5 h-2.5 rounded-full bg-[#FF5F57]" />
-            <div className="w-2.5 h-2.5 rounded-full bg-[#FFBD2E]" />
-            <div className="w-2.5 h-2.5 rounded-full bg-[#28CA41]" />
-          </div>
-          <div className="flex-1 mx-6">
-            <div className="bg-[#1A1A1A] rounded-md px-3 py-1 text-center flex items-center justify-center gap-1.5">
-              <div className="w-2 h-2 rounded-full bg-[#28CA41]/50" />
-              <span className="text-[10px] text-white/30 tracking-wide">app.getgrill.io</span>
-            </div>
+    <div className="w-full max-w-[540px] mx-auto lg:mx-0 relative">
+      <div
+        className="relative rounded-xl overflow-hidden"
+        style={{
+          border: '1px solid #EBEBEB',
+          boxShadow: '0 30px 70px -20px rgba(15,15,15,0.18), 0 12px 30px -12px rgba(15,15,15,0.08)',
+        }}
+      >
+        {/* Browser chrome — clean URL pill, no traffic lights */}
+        <div className="px-4 py-2.5 bg-[#F5F4F1] border-b border-[#EBEBEB] flex items-center justify-center">
+          <div className="bg-white rounded-md px-3 py-1 flex items-center gap-1.5 border border-[#EBEBEB]">
+            <div className="w-1.5 h-1.5 rounded-full bg-[#28CA41]/60" />
+            <span className="text-[10px] text-[#A3A3A3] tracking-wide">app.getgrill.io</span>
           </div>
         </div>
 
-        {/* ─── Chat App — Casa Legado Light Theme ─── */}
         <div className="bg-[#FAFAF8] flex flex-col">
-          {/* Messages */}
           <div
             ref={chatRef}
             className={`px-5 sm:px-6 py-5 space-y-6 h-[360px] sm:h-[420px] overflow-y-auto transition-opacity duration-500 ${fading ? 'opacity-0' : 'opacity-100'}`}
             style={{ scrollbarWidth: 'thin', scrollbarColor: '#EBEBEB transparent' }}
           >
-            {/* Empty state greeting (shows at start of each loop) */}
             {messages.length === 0 && !typingText && !isThinking && (
               <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
+                initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
                 className="flex items-center justify-center h-full"
               >
                 <div className="text-center">
@@ -318,23 +273,19 @@ function HeroChat() {
                   transition={{ duration: 0.3 }}
                 >
                   {msg.role === 'user' ? (
-                    /* ─── User bubble — exact Casa Legado ─── */
                     <div className="flex justify-end mb-1">
                       <div className="bg-[#C8956C] text-white rounded-[20px] rounded-br-md px-5 py-3 max-w-[80%]">
                         <p className="text-[14px] sm:text-[15px] leading-relaxed">{msg.content}</p>
                       </div>
                     </div>
                   ) : (
-                    /* ─── AI response — structured blocks ─── */
                     <div className="space-y-1.5">
                       {msg.blocks.map((block, bi) => (
                         <ResponseBlock key={bi} block={block} index={bi} />
                       ))}
-                      {/* Data sources — inline Casa Legado style */}
                       {msg.sources && (
                         <motion.div
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
+                          initial={{ opacity: 0 }} animate={{ opacity: 1 }}
                           transition={{ delay: 0.5 }}
                           className="flex items-center gap-1.5 pt-1"
                         >
@@ -350,14 +301,9 @@ function HeroChat() {
               ))}
             </AnimatePresence>
 
-            {/* User typing preview */}
             {typingText && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="flex justify-end mb-1"
-              >
-                <div className="bg-[#C8956C]/80 text-white rounded-[20px] rounded-br-md px-5 py-3 max-w-[80%]">
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex justify-end mb-1">
+                <div className="bg-[#C8956C]/85 text-white rounded-[20px] rounded-br-md px-5 py-3 max-w-[80%]">
                   <p className="text-[14px] sm:text-[15px] leading-relaxed">
                     {typingText}
                     <span className="inline-block w-[2px] h-4 bg-white/60 ml-0.5 animate-pulse rounded-full" />
@@ -366,25 +312,15 @@ function HeroChat() {
               </motion.div>
             )}
 
-            {/* AI thinking dots — Casa Legado bounce style */}
             {isThinking && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="flex gap-1.5 py-1"
-              >
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex gap-1.5 py-1">
                 {[0, 150, 300].map(d => (
-                  <div
-                    key={d}
-                    className="w-2 h-2 rounded-full bg-[#A3A3A3] animate-bounce"
-                    style={{ animationDelay: `${d}ms` }}
-                  />
+                  <div key={d} className="w-2 h-2 rounded-full bg-[#A3A3A3] animate-bounce" style={{ animationDelay: `${d}ms` }} />
                 ))}
               </motion.div>
             )}
           </div>
 
-          {/* ─── Input Bar — exact Casa Legado ─── */}
           <div className="border-t border-[#F2F2F0] px-5 sm:px-6 py-3">
             <div className="bg-white border border-[#EBEBEB] rounded-2xl px-5 py-3 flex items-center gap-3 shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
               <span className="flex-1 text-[14px] sm:text-[15px] text-[#A3A3A3] select-none truncate">
@@ -403,111 +339,87 @@ function HeroChat() {
           </div>
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 }
 
 /* ═══════════════════════════════════════════
-   HERO SECTION
+   HERO SECTION — editorial, cream, no glow
    ═══════════════════════════════════════════ */
 
 export default function Hero() {
-  const typedWord = useTypewriter(HERO_WORDS);
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-
-  const orb1X = useTransform(mouseX, [0, window.innerWidth], [-25, 25]);
-  const orb1Y = useTransform(mouseY, [0, window.innerHeight], [-20, 20]);
-  const orb2X = useTransform(mouseX, [0, window.innerWidth], [20, -20]);
-  const orb2Y = useTransform(mouseY, [0, window.innerHeight], [15, -15]);
-
-  const handleMouseMove = (e) => {
-    mouseX.set(e.clientX);
-    mouseY.set(e.clientY);
-  };
-
   return (
-    <section
-      onMouseMove={handleMouseMove}
-      className="relative min-h-screen flex items-center pt-20 pb-12 overflow-hidden"
-    >
-      {/* Ambient orbs */}
-      <motion.div
-        style={{ x: orb1X, y: orb1Y }}
-        className="absolute top-1/4 -left-40 w-[500px] h-[500px] rounded-full bg-copper/8 blur-[120px] pointer-events-none"
-      />
-      <motion.div
-        style={{ x: orb2X, y: orb2Y }}
-        className="absolute bottom-1/4 -right-40 w-[400px] h-[400px] rounded-full bg-copper/5 blur-[100px] pointer-events-none"
-      />
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+    <section className="relative min-h-screen flex items-center pt-28 pb-16 bg-cream text-ink">
+      <div className="container-editorial w-full">
         <motion.div
           variants={staggerContainer}
           initial="hidden"
           animate="visible"
-          className="grid lg:grid-cols-[1fr_1.15fr] gap-12 lg:gap-20 items-center"
+          className="grid lg:grid-cols-[1fr_1.05fr] gap-12 lg:gap-16 items-center"
         >
-          {/* ─── Left: Text ─── */}
-          <div className="text-center lg:text-left">
-            <motion.div variants={blurIn}>
-              <Badge variant="copper" className="mb-6">
-                <Sparkles size={12} />
-                Guest Intelligence Platform
-              </Badge>
+          {/* Left — copy */}
+          <div>
+            <motion.div variants={fadeUp} className="label-mono mb-7 inline-flex items-center gap-2">
+              <motion.span
+                animate={{ opacity: [0.4, 1, 0.4] }}
+                transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }}
+                className="inline-block w-1.5 h-1.5 rounded-full"
+                style={{ background: '#C8956C' }}
+              />
+              Grill — for boutique hotels
             </motion.div>
 
             <motion.h1
               variants={blurIn}
-              className="text-4xl sm:text-5xl lg:text-[3.5rem] xl:text-6xl font-bold leading-[1.1] tracking-tight"
+              className="font-serif text-[44px] sm:text-[56px] lg:text-[64px] xl:text-[72px] leading-[1.04] tracking-[-0.02em] text-balance"
             >
-              Every guest{' '}
-              <br className="hidden sm:block" />
-              <span className="text-gradient-copper italic">
-                {typedWord}
-                <span className="animate-pulse">|</span>
-              </span>
+              We make your team<br />
+              <span className="italic" style={{ color: '#A0734E' }}>unforgettable</span>,<br />
+              not replaceable.
             </motion.h1>
 
             <motion.p
               variants={fadeUp}
-              className="mt-6 text-lg sm:text-xl text-slate-light max-w-xl mx-auto lg:mx-0 leading-relaxed"
+              className="mt-8 text-[17px] sm:text-[18px] leading-[1.7] text-[#6B6B6B] max-w-[520px]"
             >
-              The AI staff agent for boutique hotels. 34 tools in one chat — from
-              guest memory to competitor rates. Your team knows every guest before
-              they walk in the door.
+              Grill is the AI agent for hotel staff. It listens to every system
+              you already run, remembers every guest, and prepares the next move
+              — so your team can focus on the moments only humans can give.
             </motion.p>
 
             <motion.div
               variants={fadeUp}
-              className="mt-10 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
+              className="mt-10 flex flex-col sm:flex-row gap-4"
             >
-              <Button href="#waitlist" glow className="text-base px-8 py-3.5">
-                Request Demo
-              </Button>
-              <Button href="#platform" variant="ghost" className="text-base px-8 py-3.5">
-                See it in action
-              </Button>
+              <a
+                href="#waitlist"
+                className="inline-flex items-center justify-center rounded-full px-7 py-3.5 bg-ink text-white text-[14px] font-medium hover:bg-[#2A2A2A] transition-colors"
+              >
+                Request a demo
+              </a>
+              <a
+                href="#what-is-grill"
+                className="inline-flex items-center justify-center rounded-full px-7 py-3.5 bg-transparent border border-[#EBEBEB] text-ink text-[14px] hover:border-ink transition-colors"
+              >
+                See it in action →
+              </a>
             </motion.div>
 
-            {/* Trust signals */}
             <motion.div
               variants={fadeUp}
-              className="mt-8 flex items-center gap-6 justify-center lg:justify-start text-[13px] text-slate-light/60"
+              className="mt-10 pt-7 border-t border-[#EBEBEB] flex flex-wrap items-center gap-x-8 gap-y-3 label-mono"
+              style={{ fontSize: 10 }}
             >
-              <span className="flex items-center gap-1.5">
-                <Check size={14} className="text-copper" />
-                No rip &amp; replace
-              </span>
-              <span className="flex items-center gap-1.5">
-                <Check size={14} className="text-copper" />
-                Setup in hours
-              </span>
+              <span>◇ No rip & replace</span>
+              <span>◇ Setup in an afternoon</span>
+              <span>◇ Humans stay in control</span>
             </motion.div>
           </div>
 
-          {/* ─── Right: Live Chat Demo ─── */}
-          <HeroChat />
+          {/* Right — chat artifact */}
+          <motion.div variants={fadeUp}>
+            <HeroChat />
+          </motion.div>
         </motion.div>
       </div>
     </section>
